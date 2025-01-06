@@ -14,6 +14,8 @@ Explanation:
 #include <RescueServo.h>
 #include <RescueLager.h>
 
+#define DELAY_TIME 300
+
 #define STG_TOP_LEFT 0
 #define STG_TOP_RIGHT 1
 #define STG_BUTTON_LEFT 2
@@ -28,7 +30,6 @@ Explanation:
 #define BUTTON_LEFT 2
 #define BUTTON_RIGHT 3
 
-// TODO
 #define PIN_BUTTON_LEFT 11
 #define PIN_BUTTON_RIGHT 9
 #define PIN_MIDDLE 12
@@ -41,7 +42,6 @@ private:
     uint8_t targetStorageButton = 2;
 
     unsigned long currentTime;
-    unsigned long delayTime;
 
     unsigned long ServoTopTime;
     RescueLager ServoTop;
@@ -49,7 +49,6 @@ private:
     unsigned long ServoMiddleTime;
     RescueLager ServoMiddle;
     
-
     unsigned long ServoButtonLeftTime;
     RescueServo ServoButtonLeft;
 
@@ -147,22 +146,22 @@ public:
         if (this->checkStorage())
         {
             this->updateStorage();
-            if (ServoTop.getCurrentDegree() != ServoTop.getWorkingDegree(STANDBY) && (ServoTopTime + delayTime) > currentTime)
+            if (ServoTop.getCurrentDegree() != ServoTop.getWorkingDegree(STANDBY) && (ServoTopTime + DELAY_TIME) > currentTime)
             {
                 ServoTop.setCurrentDegree(STANDBY);
             }
 
-            if (ServoMiddle.getCurrentDegree() != ServoMiddle.getWorkingDegree(STANDBY) && (ServoMiddleTime + delayTime) > currentTime)
+            if (ServoMiddle.getCurrentDegree() != ServoMiddle.getWorkingDegree(STANDBY) && (ServoMiddleTime + DELAY_TIME) > currentTime)
             {
                 ServoMiddle.setCurrentDegree(STANDBY);
             }
 
-            if (ServoButtonLeft.getCurrentDegree() != ServoButtonLeft.getWorkingDegree(STANDBY) && (ServoButtonLeftTime + delayTime) > currentTime)
+            if (ServoButtonLeft.getCurrentDegree() != ServoButtonLeft.getWorkingDegree(STANDBY) && (ServoButtonLeftTime + DELAY_TIME) > currentTime)
             {
                 ServoButtonLeft.setCurrentDegree(STANDBY);
             }
 
-            if (ServoButtonRight.getCurrentDegree() != ServoButtonRight.getWorkingDegree(STANDBY) && (ServoButtonRightTime + delayTime) > currentTime)
+            if (ServoButtonRight.getCurrentDegree() != ServoButtonRight.getWorkingDegree(STANDBY) && (ServoButtonRightTime + DELAY_TIME) > currentTime)
             {
                 ServoButtonRight.setCurrentDegree(STANDBY);
             }
