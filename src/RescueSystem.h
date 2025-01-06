@@ -29,10 +29,10 @@ Explanation:
 #define BUTTON_RIGHT 3
 
 // TODO
-#define PIN_BUTTON_LEFT 5
-#define PIN_BUTTON_RIGHT 6
-#define PIN_MIDDLE 7
-#define PIN_TOP 8
+#define PIN_BUTTON_LEFT 11
+#define PIN_BUTTON_RIGHT 9
+#define PIN_MIDDLE 12
+#define PIN_TOP 13
 
 class RescueSystem
 {
@@ -45,21 +45,10 @@ private:
 
     unsigned long ServoTopTime;
     RescueLager ServoTop;
-    void setServoTop(uint8_t side)
-    {
-        ServoMiddle.setCurrentDegree(side);
-        ServoMiddleTime = currentTime;
-        (side) ? storage[STG_TOP_RIGHT]-- : storage[STG_TOP_LEFT]--;
-    }
 
     unsigned long ServoMiddleTime;
     RescueLager ServoMiddle;
-    void setServoMiddle(uint8_t side)
-    {
-        ServoMiddle.setCurrentDegree(side);
-        ServoMiddleTime = currentTime;
-        (side) ? storage[STG_BUTTON_RIGHT]++ : storage[STG_BUTTON_LEFT]++;
-    }
+    
 
     unsigned long ServoButtonLeftTime;
     RescueServo ServoButtonLeft;
@@ -75,19 +64,52 @@ private:
             return false;
     }
 
+    void setServoTop(uint8_t side)
+    {
+        ServoMiddle.setCurrentDegree(side);
+        ServoMiddleTime = currentTime;
+        (side) ? storage[STG_TOP_RIGHT]-- : storage[STG_TOP_LEFT]--;
+    }
+
+    void setServoMiddle(uint8_t side)
+    {
+        ServoMiddle.setCurrentDegree(side);
+        ServoMiddleTime = currentTime;
+        (side) ? storage[STG_BUTTON_RIGHT]++ : storage[STG_BUTTON_LEFT]++;
+    }
+
+    void putOut(bool side)
+    { // Put the Rescue shit out
+        if (side == LEFT)
+        {
+            ServoButtonLeft.setCurrentDegree(WORK);
+            storage[STG_BUTTON_LEFT]--;
+        }
+
+        else if (side == RIGHT)
+        {
+            ServoButtonRight.setCurrentDegree(WORK);
+            storage[STG_BUTTON_RIGHT]--;
+        }
+        this->updateStorage();
+    }
+
 public:
     RescueSystem() : // TODO
-                     ServoButtonLeft(PIN_BUTTON_LEFT, 0, 180, 20, 100),
-                     ServoButtonRight(PIN_BUTTON_RIGHT, 0, 180, 20, 100),
-                     ServoMiddle(PIN_MIDDLE, 0, 90, 180),
-                     ServoTop(PIN_TOP, 0, 90, 180)
     {
-
         storage[STG_BUTTON_LEFT] = 0;
         storage[STG_BUTTON_RIGHT] = 0;
         storage[STG_TOP_LEFT] = 4;
         storage[STG_TOP_RIGHT] = 4;
         this->updateStorage();
+    }
+
+    void begin()
+    {
+        ServoButtonLeft(PIN_BUTTON_LEFT, 0, 180, 20, 100),
+        ServoButtonRight(PIN_BUTTON_RIGHT, 0, 180, 20, 100),
+        ServoMiddle(PIN_MIDDLE, 0, 90, 180),
+        ServoTop(PIN_TOP, 0, 90, 180)
     }
 
     void pickTopStorage()
@@ -121,7 +143,7 @@ public:
     }
 
     void update()
-    { // If Servo Top is not on standby mode and time to change
+    { // Check the servo position and if servo is not on standby mode and time to change
         if (this->checkStorage())
         {
             this->updateStorage();
@@ -145,22 +167,6 @@ public:
                 ServoButtonRight.setCurrentDegree(STANDBY);
             }
         }
-    }
-
-    void putOut(bool side)
-    { // Put the Rescue shit out
-        if (side == LEFT)
-        {
-            ServoButtonLeft.setCurrentDegree(WORK);
-            storage[STG_BUTTON_LEFT]--;
-        }
-
-        else if (side == RIGHT)
-        {
-            ServoButtonRight.setCurrentDegree(WORK);
-            storage[STG_BUTTON_RIGHT]--;
-        }
-        this->updateStorage();
     }
 
     void setServoManually(uint8_t ServoIndex, uint8_t state = 3)
