@@ -122,7 +122,7 @@ public:
 
     void update()
     { // If Servo Top is not on standby mode and time to change
-        if (checkStorage)
+        if (this->checkStorage())
         {
             this->updateStorage();
             if (ServoTop.getCurrentDegree() != ServoTop.getWorkingDegree(STANDBY) && (ServoTopTime + delayTime) > currentTime)

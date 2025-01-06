@@ -6,7 +6,7 @@
 #define WORK_RIGHT 1
 
 #include <Arduino.h>
-#include <servo.h>
+#include <Servo.h>
 
 
 class RescueLager
