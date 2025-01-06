@@ -95,7 +95,7 @@ private:
     }
 
 public:
-    RescueSystem() : // TODO
+    RescueSystem() // TODO
     {
         storage[STG_BUTTON_LEFT] = 0;
         storage[STG_BUTTON_RIGHT] = 0;
