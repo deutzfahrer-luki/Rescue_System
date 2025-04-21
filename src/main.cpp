@@ -5,7 +5,11 @@
 
 //RescueSystem RSL(9, 45, 80, 2000, 6);
 
-RescuePackageHandler rescueHandler(9, 45, 80); // Beispiel: Servo an Pin 9, Standby = 90 Grad, Arbeitsposition = 90+30 = 120 Grad
+
+// TODO SET PINS CORRECT
+//RescuePackageHandler rescueHandler(9, 135, -60); // left -> servo1 
+RescuePackageHandler rescueHandler(9, 45, 60);  //right -> servo2
+
 
 void setup() {
   Serial.begin(9600);
@@ -17,8 +21,9 @@ void loop() {
 
   if (Serial.available()) {
     char cmd = Serial.read();
+    Serial.println(cmd);
     
-    if (cmd == 'T') {
+    if (cmd == 'T' || cmd == 't') {
       rescueHandler.trigger(); 
     } 
     else if (cmd == 'C' || cmd == 'c') {

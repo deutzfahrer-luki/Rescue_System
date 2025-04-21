@@ -6,7 +6,7 @@
 
 class RescuePackageHandler {
   public:
-    RescuePackageHandler(uint8_t servoPin, int8_t standbyPos, int8_t degToWorking, uint8_t packagesCount = 6);
+    RescuePackageHandler(uint8_t servoPin, int16_t standbyPos, int8_t degToWorking, uint8_t packagesCount = 6);
     void begin();
     void update();
     void trigger(uint8_t len = 1);
@@ -20,7 +20,7 @@ class RescuePackageHandler {
   private:
     Servo _servo;
     const uint8_t _servoPin;
-    const int8_t _standbyPosition;
+    const int16_t _standbyPosition;
     const int8_t _degToWorkingPositionFromStandByPosition;
     uint8_t _packageCount;
     uint8_t _pendingTriggers;

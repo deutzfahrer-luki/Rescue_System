@@ -1,6 +1,6 @@
 #include "RescuePackageHandler.h"
 
-RescuePackageHandler::RescuePackageHandler(uint8_t servoPin, int8_t standbyPos, int8_t degToWorking, uint8_t packagesCount)
+RescuePackageHandler::RescuePackageHandler(uint8_t servoPin, int16_t standbyPos, int8_t degToWorking, uint8_t packagesCount)
   : _servoPin(servoPin),
     _standbyPosition(standbyPos),
     _degToWorkingPositionFromStandByPosition(degToWorking),
@@ -9,7 +9,12 @@ RescuePackageHandler::RescuePackageHandler(uint8_t servoPin, int8_t standbyPos, 
     _clearAllMode(false),
     _currentState(IDLE),
     _lastStateChangeMillis(0)
-{}
+{
+  Serial.println(standbyPos);
+  Serial.println(_standbyPosition);
+  Serial.println();
+
+}
 
 void RescuePackageHandler::begin() {
   _servo.attach(_servoPin);
@@ -37,6 +42,9 @@ void RescuePackageHandler::update() {
       break;
     case MOVING_TO_WORKING:
       if (now - _lastStateChangeMillis >= _moveDuration) {
+        Serial.println(_standbyPosition);
+        Serial.println(_degToWorkingPositionFromStandByPosition);
+        Serial.println(_standbyPosition + _degToWorkingPositionFromStandByPosition);
         _servo.write(_standbyPosition + _degToWorkingPositionFromStandByPosition);
         _currentState = AT_WORKING;
         _lastStateChangeMillis = now;
