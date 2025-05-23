@@ -1,87 +1,69 @@
 #include <Arduino.h>
 
-class MotorController {
-  public:
-    MotorController(int pwmA, int pwmB,
-                    int ain1, int ain2,
-                    int bin1, int bin2,
-                    int stby)
-    : pwmA(pwmA), pwmB(pwmB),
-      ain1(ain1), ain2(ain2),
-      bin1(bin1), bin2(bin2),
-      stby(stby) {}
+#define motor 1
 
-    void begin() {
-      pinMode(pwmA, OUTPUT);
-      pinMode(pwmB, OUTPUT);
-      pinMode(ain1, OUTPUT);
-      pinMode(ain2, OUTPUT);
-      pinMode(bin1, OUTPUT);
-      pinMode(bin2, OUTPUT);
-      pinMode(stby, OUTPUT);
-      digitalWrite(stby, HIGH); // Aktivieren
-      stop();
-    }
+const int STBY = 27;
+const int pwm =100;
 
-    // Gegensinnige Drehung: A vorwärts, B rückwärts (oder andersherum)
-    void rotateOpposite(int speed, bool clockwise) {
-      digitalWrite(ain1, clockwise ? HIGH : LOW);
-      digitalWrite(ain2, clockwise ? LOW : HIGH);
-      analogWrite(pwmA, speed);
+#if motor == 1 //VL
+const int PWM_A = 7;
+const int AIN1 = 23;
+const int AIN2 = 25;
+#endif
 
-      digitalWrite(bin1, clockwise ? LOW : HIGH);
-      digitalWrite(bin2, clockwise ? HIGH : LOW);
-      analogWrite(pwmB, speed);
-    }
+#if motor == 2 // VR
+const int PWM_A = 6;
+const int AIN1 = 31;
+const int AIN2 = 29;
+#endif
 
-    // Motorbremse aktiv
-    void stop() {
-      analogWrite(pwmA, 0);
-      analogWrite(pwmB, 0);
+#if motor == 3 // VR
+const int PWM_A = 5;
+const int AIN1 = 49;
+const int AIN2 = 47;
+#endif
 
-      digitalWrite(ain1, HIGH);
-      digitalWrite(ain2, HIGH);
+#if motor == 4 // VR
+const int PWM_A = 4;
+const int AIN1 = 43;
+const int AIN2 = 45;
+#endif
 
-      digitalWrite(bin1, HIGH);
-      digitalWrite(bin2, HIGH);
-    }
 
-  private:
-    int pwmA, pwmB;
-    int ain1, ain2;
-    int bin1, bin2;
-    int stby;
-};
 
-// 💡 Pins aus deinem Plan:
-MotorController motor(
-  7,    // MOT1_PWM
-  6,    // MOT2_PWM
-  31,   // MOT1_IN1
-  29,   // MOT1_IN2
-  23,   // MOT2_IN1
-  25,   // MOT2_IN2
-  27    // MOT_STBY
-);
 
-void setup() {
-  motor.begin();
+bool dir = 1;
+
+void breaking()
+{
+  digitalWrite(AIN1, 1);
+  digitalWrite(AIN2,1);
+  delay(2000);
 }
 
+void setup() {
+  pinMode(PWM_A, OUTPUT);
+  pinMode(AIN1, OUTPUT);
+  pinMode(AIN2, OUTPUT);
+  pinMode(STBY, OUTPUT);
+
+  digitalWrite(STBY, HIGH);  // TB6612 aktivieren
+}
+
+
+
 void loop() {
-  // Dreht im Uhrzeigersinn (eine Seite vor, eine zurück)
-  motor.rotateOpposite(100, true);
+  // Vorwärts
+  dir=!dir;
+  analogWrite(PWM_A, pwm);
+  digitalWrite(AIN1, true);
+  digitalWrite(AIN2, false);
   delay(2000);
-
-  // Bremsen
-  motor.stop();
-  delay(1000);
-
-  // Gegendrehung
-  motor.rotateOpposite(100, false);
+  breaking();
+  analogWrite(PWM_A, pwm);
+  digitalWrite(AIN1, false);
+  digitalWrite(AIN2, true);
   delay(2000);
+  breaking();
 
-  // Wieder bremsen
-  motor.stop();
-  delay(2000);
 }
