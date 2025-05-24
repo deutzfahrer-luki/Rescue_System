@@ -1,25 +1,30 @@
 #include <Arduino.h>
 #include <Adafruit_NeoPixel.h>
 
-#define PIN            11       // Datenpin
-#define NUMPIXELS      8       // Anzahl der RGBW-LEDs
-#define PIXEL_TYPE     NEO_GRBW + NEO_KHZ800  // Für RGBW
+#define PIN            11
+#define NUMPIXELS      5
+#define PIXEL_TYPE     NEO_GRBW + NEO_KHZ800
 
 Adafruit_NeoPixel strip(NUMPIXELS, PIN, PIXEL_TYPE);
 
 void setup() {
+  pinMode(PIN, OUTPUT);
   strip.begin();
   strip.show(); // Alle LEDs aus
 }
 
 void loop() {
-  // Beispiel: LED 0 auf reines Weiß setzen
-  strip.setPixelColor(0, strip.Color(0, 0, 0, 255)); // (R,G,B,W)
+  // Alle LEDs auf Weiß setzen
+  for (int i = 0; i < NUMPIXELS; i++) {
+    strip.setPixelColor(i, strip.Color(0, 0, 0, 255)); // nur Weiß
+  }
   strip.show();
   delay(1000);
 
-  // LED aus
-  strip.setPixelColor(0, strip.Color(0, 0, 0, 0));
+  // Alle LEDs ausschalten
+  for (int i = 0; i < NUMPIXELS; i++) {
+    strip.setPixelColor(i, strip.Color(0, 0, 0, 0)); // aus
+  }
   strip.show();
   delay(1000);
 }
