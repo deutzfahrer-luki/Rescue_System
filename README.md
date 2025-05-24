@@ -1,44 +1,30 @@
-# RescuePackageHandler
+# motorTreiberTest
 
-## Methoden (Kurzbeschreibung)
-- **begin()**  
-  Initialisiert den Servo und setzt den Anfangszustand.
+Dieses Repository enthält verschiedene Skripte und Projekte, die in separaten Branches organisiert sind. Jeder Branch fokussiert sich auf ein bestimmtes Teilprojekt oder eine Funktionalität.
 
-- **update()**  
-  Führt die non‑blocking Logik (basierend auf `millis()`) zur Bewegung des Servos aus.
+## Branches und ihre Inhalte
 
-- **trigger(uint8_t len = 1)**  
-  Plant das Auswerfen von `len` Paketen. Falls weniger Pakete vorhanden sind, wird die Anzahl entsprechend begrenzt.
+- **Akku**  
+  Skripte Akku-Überwachung und Steuerung.
 
-- **clearAll()**  
-  Aktiviert den Clear-All-Modus, sodass alle Pakete ausgegeben werden, bis keine mehr übrig sind.
+- **Beleuchtung**  
+  Code für die Steuerung der Beleuchtung.
 
-- **resetPackages(uint8_t amount = 6)**  
-  Setzt die Anzahl der RescuePackages (Standard: 6) zurück.
+- **Drehleuchte**  
+  Programme für die Drehleuchte.
 
-- **getPackageCount()**  
-  Liefert die noch verfügbaren Pakete.
+- **Motortreiber**  
+  Implementierung und Tests für den Motortreiber.
 
-- **isBusy()**  
-  Prüft, ob der Handler gerade aktiv ist (nicht im IDLE-Zustand oder mit ausstehenden Triggern).
+- **RS-System**
+  Rescue System Skript
 
-- **stop()**  
-  Stoppt den Servo sofort, setzt alle ausstehenden Vorgänge zurück und bringt ihn in die Standby-Position.
+- **ToF**  
+  Skript für XSHUT testen/suchen
+  
+## Nutzung
 
-- **getStateName()**  
-  Gibt den Namen des aktuellen Zustands als `const char*` zurück.
+Je nach gewünschtem Teilprojekt kann der entsprechende Branch ausgecheckt werden:
 
-## Zustände (enum State)
-- **IDLE**  
-  Servo befindet sich in der Standby-Position.
-
-- **MOVING_TO_WORKING**  
-  Servo bewegt sich in die Arbeitsposition (Auswurf).
-
-- **AT_WORKING**  
-  Servo ist an der Arbeitsposition, um ein Paket auszuwerfen.
-
-- **RETURNING**  
-  Servo bewegt sich zurück in die Standby-Position.
-
----
+```bash
+git checkout <Branch-Name>
