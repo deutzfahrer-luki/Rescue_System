@@ -84,10 +84,10 @@ void setup() {
 void loop() {
 #if MODUS == 1
   // Original-Modus: Motoren nacheinander vorwärts/rückwärts
-  driveMotor(PWM_1, AIN1_1, AIN2_1);
-  driveMotor(PWM_2, AIN1_2, AIN2_2);
+  //driveMotor(PWM_1, AIN1_1, AIN2_1);
+  //driveMotor(PWM_2, AIN1_2, AIN2_2);
   driveMotor(PWM_3, AIN1_3, AIN2_3);
-  driveMotor(PWM_4, AIN1_4, AIN2_4);
+  //driveMotor(PWM_4, AIN1_4, AIN2_4);
 
 #elif MODUS == 2
   // Alle Motoren gleichzeitig vorwärts
