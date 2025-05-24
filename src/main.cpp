@@ -1,29 +1,29 @@
-#include <Wire.h>
+// main.cpp
 #include <Arduino.h>
+#include "RotatingLight.h"
 
-
-int list[] = {37,39,41,32,34,36,30};
-// 37 = 0 = HL
-// 39 = 1 = Hinten
-// 41 = 2 = HR
-// 32 = 3 = VR
-// 34 = 4 = Vorne Oben
-// 36 = 5 = VL
-// 30 = 6 = Vorne Unten
+RotatingLight _ring(10);
 
 void setup() {
-  Wire.begin();
+  _ring.begin();
   Serial.begin(9600);
-  while (!Serial); // Warte auf serielle Verbindung
-  int h = 6;
- for  (int i = 0; i<sizeof(list)/sizeof(int);i++)
- {
-  pinMode(list[i], OUTPUT);
-  digitalWrite(list[i], (h==i)?1:0);
-}
-
 }
 
 void loop() {
-yield();
+  _ring.update();
+
+  if (Serial.available() > 0) {
+    char input = Serial.read();
+    if (input == '1') {
+      _ring.set(RotatingLightState::FoundVictimBig);
+    } else if (input == '2') {
+      _ring.set(RotatingLightState::FoundVictimMiddlel);
+    } else if (input == '3') {
+      _ring.set(RotatingLightState::FoundVictimLiddle);
+    } else if (input == '4') {
+      _ring.set(RotatingLightState::Error);
+    } else if (input == '5') {
+      _ring.set(RotatingLightState::Driving);
+    }
+  }
 }
