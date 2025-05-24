@@ -2,6 +2,10 @@
 
 #define MODUS 2  // Ändere zu 2 für „alle geradeaus“
 
+const int analogPin = A7;
+const float vRef = 5.0;
+const float voltageDividerFactor = 2.0;
+
 const int STBY = 27;
 const int pwmValue = 100;
 
@@ -54,14 +58,25 @@ void driveMotor(int pwmPin, int ain1, int ain2) {
 // Ein Motor nur vorwärts fahren
 // Motor 3 (HL) – Drehrichtung korrigiert
 void driveForward(int pwmPin, int ain1, int ain2, bool reverse = false) {
-  analogWrite(pwmPin, pwmValue);
-  if (reverse) {
-    digitalWrite(ain1, LOW);
-    digitalWrite(ain2, HIGH);
-  } else {
-    digitalWrite(ain1, HIGH);
-    digitalWrite(ain2, LOW);
+  if (checkBattery())
+  {
+    analogWrite(pwmPin, pwmValue);
+    if (reverse) {
+      digitalWrite(ain1, LOW);
+      digitalWrite(ain2, HIGH);
+    } else {
+      digitalWrite(ain1, HIGH);
+      digitalWrite(ain2, LOW);
+    }
   }
+}
+
+bool checkBattery()
+{
+  int adcValue = analogRead(analogPin); // 0 bis 1023
+  float voltageAtPin = (adcValue / 1023.0) * vRef;  // Spannung nach dem Teiler (max. 4.5V)
+  float originalVoltage = voltageAtPin * voltageDividerFactor; // Rückrechnung zur Originalspannung
+  return (originalVoltage>6)?true:false;
 }
 
 
