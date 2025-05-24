@@ -1,30 +1,29 @@
+#include <Wire.h>
 #include <Arduino.h>
-#include <Adafruit_NeoPixel.h>
 
-#define PIN            11
-#define NUMPIXELS      5
-#define PIXEL_TYPE     NEO_GRBW + NEO_KHZ800
 
-Adafruit_NeoPixel strip(NUMPIXELS, PIN, PIXEL_TYPE);
+int list[] = {37,39,41,32,34,36,30};
+// 37 = 0 = HL
+// 39 = 1 = Hinten
+// 41 = 2 = HR
+// 32 = 3 = VR
+// 34 = 4 = Vorne Oben
+// 36 = 5 = VL
+// 30 = 6 = Vorne Unten
 
 void setup() {
-  pinMode(PIN, OUTPUT);
-  strip.begin();
-  strip.show(); // Alle LEDs aus
+  Wire.begin();
+  Serial.begin(9600);
+  while (!Serial); // Warte auf serielle Verbindung
+  int h = 6;
+ for  (int i = 0; i<sizeof(list)/sizeof(int);i++)
+ {
+  pinMode(list[i], OUTPUT);
+  digitalWrite(list[i], (h==i)?1:0);
+}
+
 }
 
 void loop() {
-  // Alle LEDs auf Weiß setzen
-  for (int i = 0; i < NUMPIXELS; i++) {
-    strip.setPixelColor(i, strip.Color(0, 0, 0, 255)); // nur Weiß
-  }
-  strip.show();
-  delay(1000);
-
-  // Alle LEDs ausschalten
-  for (int i = 0; i < NUMPIXELS; i++) {
-    strip.setPixelColor(i, strip.Color(0, 0, 0, 0)); // aus
-  }
-  strip.show();
-  delay(1000);
+yield();
 }
