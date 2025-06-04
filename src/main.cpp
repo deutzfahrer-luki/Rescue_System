@@ -3,10 +3,6 @@
 #include <Arduino.h>
 
 
-//RescueSystem RSL(9, 45, 80, 2000, 6);
-
-
-// TODO SET PINS CORRECT
 //RescuePackageHandler rescueHandler(10, 128, -70); // right
 RescuePackageHandler rescueHandler(9, 45, 70);  //left
 
