@@ -7,8 +7,8 @@
 
 
 // TODO SET PINS CORRECT
-//RescuePackageHandler rescueHandler(9, 135, -60); // left -> servo1 
-RescuePackageHandler rescueHandler(9, 45, 60);  //right -> servo2
+//RescuePackageHandler rescueHandler(10, 135, -70); // right -> servo1 
+RescuePackageHandler rescueHandler(9, 45, 70);  //left -> servo2
 
 
 void setup() {
