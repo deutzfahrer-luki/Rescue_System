@@ -55,6 +55,15 @@ void driveMotor(int pwmPin, int ain1, int ain2) {
   delay(500);
 }
 
+
+bool checkBattery()
+{
+  int adcValue = analogRead(analogPin); // 0 bis 1023
+  float voltageAtPin = (adcValue / 1023.0) * vRef;  // Spannung nach dem Teiler (max. 4.5V)
+  float originalVoltage = voltageAtPin * voltageDividerFactor; // Rückrechnung zur Originalspannung
+  return (originalVoltage>6)?true:false;
+}
+
 // Ein Motor nur vorwärts fahren
 // Motor 3 (HL) – Drehrichtung korrigiert
 void driveForward(int pwmPin, int ain1, int ain2, bool reverse = false) {
@@ -71,13 +80,6 @@ void driveForward(int pwmPin, int ain1, int ain2, bool reverse = false) {
   }
 }
 
-bool checkBattery()
-{
-  int adcValue = analogRead(analogPin); // 0 bis 1023
-  float voltageAtPin = (adcValue / 1023.0) * vRef;  // Spannung nach dem Teiler (max. 4.5V)
-  float originalVoltage = voltageAtPin * voltageDividerFactor; // Rückrechnung zur Originalspannung
-  return (originalVoltage>6)?true:false;
-}
 
 
 void setup() {
@@ -114,10 +116,10 @@ driveForward(PWM_4, AIN1_4, AIN2_4, true);        // HR (umdrehen!)
 
   delay(3000);
 
-  braking(AIN1_1, AIN2_1, PWM_1);
-  braking(AIN1_2, AIN2_2, PWM_2);
-  braking(AIN1_3, AIN2_3, PWM_3);
-  braking(AIN1_4, AIN2_4, PWM_4);
+  //braking(AIN1_1, AIN2_1, PWM_1);
+  //braking(AIN1_2, AIN2_2, PWM_2);
+  //braking(AIN1_3, AIN2_3, PWM_3);
+  //braking(AIN1_4, AIN2_4, PWM_4);
 
   delay(2000);
 #endif
