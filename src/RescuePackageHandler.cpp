@@ -10,9 +10,7 @@ RescuePackageHandler::RescuePackageHandler(uint8_t servoPin, int16_t standbyPos,
     _currentState(IDLE),
     _lastStateChangeMillis(0)
 {
-  Serial.println(standbyPos);
-  Serial.println(_standbyPosition);
-  Serial.println();
+  _servo.write(standbyPos);
 
 }
 
@@ -42,9 +40,6 @@ void RescuePackageHandler::update() {
       break;
     case MOVING_TO_WORKING:
       if (now - _lastStateChangeMillis >= _moveDuration) {
-        Serial.println(_standbyPosition);
-        Serial.println(_degToWorkingPositionFromStandByPosition);
-        Serial.println(_standbyPosition + _degToWorkingPositionFromStandByPosition);
         _servo.write(_standbyPosition + _degToWorkingPositionFromStandByPosition);
         _currentState = AT_WORKING;
         _lastStateChangeMillis = now;

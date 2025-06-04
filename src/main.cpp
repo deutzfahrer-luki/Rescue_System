@@ -7,7 +7,7 @@
 
 
 // TODO SET PINS CORRECT
-//RescuePackageHandler rescueHandler(10, 135, -70); // right -> servo1 
+//RescuePackageHandler rescueHandler(10, 128, -70); // right -> servo1 
 RescuePackageHandler rescueHandler(9, 45, 70);  //left -> servo2
 
 
