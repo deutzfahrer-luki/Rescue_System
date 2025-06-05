@@ -1,77 +1,36 @@
-// RotatingLight.h
-#ifndef ROTATINGLIGHT_H
-#define ROTATINGLIGHT_H
+#ifndef MYNEOPIXEL_H
+#define MYNEOPIXEL_H
 
 #include <Adafruit_NeoPixel.h>
 
-enum class RotatingLightState {
+enum Color {
+  OFF,
   RED,
   YELLOW,
-  GREEN,
-  OFF
+  GREEN
 };
 
-enum class Direction {
+enum Position {
   LEFT,
   RIGHT
 };
 
-
-
-
-class RotatingLight {
+class MyNeoPixel {
 private:
   Adafruit_NeoPixel _pixels;
-  uint8_t _numPixels = 12;
-  RotatingLightState _states[12];
-  int _position;
   uint8_t _offset;
+  static const uint8_t NUM_LEDS = 12;
+  Color _ledColors[NUM_LEDS];  // Array für aktuellen Farbzustand
 
-  RotatingLightState _state;
-
-
-  uint32_t _green;
-  uint32_t _orange;
-  uint32_t _yellow;
-  uint32_t _red;
-
-  uint32_t _getDimmedColor(uint32_t color, float factor);
-  void _runningLed(uint32_t color);
-  void _setFull(uint32_t color);
-  void printArray() {
-    for (int i = 0; i < _numPixels; i++) {
-      Serial.print("Pixel ");
-      Serial.print(i);
-      Serial.print(": ");
-  
-      switch (_states[i]) {
-        case RotatingLightState::OFF:
-          Serial.println("OFF");
-          break;
-        case RotatingLightState::GREEN:
-          Serial.println("GREEN");
-          break;
-        case RotatingLightState::YELLOW:
-          Serial.println("YELLOW");
-          break;
-        case RotatingLightState::RED:
-          Serial.println("RED");
-          break;
-        default:
-          Serial.println("UNKNOWN");
-          break;
-      }
-    }
-    Serial.println();
-  }
-  
+  uint32_t getColor(Color c);
+  uint8_t ledIndex(uint8_t i);
+  void update();  // aktualisiert LEDs basierend auf _ledColors
 
 public:
-  RotatingLight(uint8_t pin, uint8_t offset);
+  MyNeoPixel(uint8_t pin, uint8_t offset = 0);
   void begin();
-  void set(RotatingLightState state, Direction dir);
-  void update();
-  void setStates(RotatingLightState state, uint8_t position);
+  void setPositionColor(Position pos, Color c);
+  void clear();
 };
 
-#endif // ROTATINGLIGHT_H
+#endif
