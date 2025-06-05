@@ -1,82 +1,72 @@
 // RotatingLight.cpp
 #include "RotatingLight.h"
 
-RotatingLight::RotatingLight(uint8_t pin)
+RotatingLight::RotatingLight(uint8_t pin, uint8_t offset)
   : _pixels(_numPixels, pin, NEO_GRB + NEO_KHZ800),
     _position(0),
-    _counter(0),
-    _state(RotatingLightState::Driving)
+    _offset(offset),
+    _state(RotatingLightState::OFF)
 {
   _green = _pixels.Color(0, 255, 0);
   _orange = _pixels.Color(255, 100, 0);
   _yellow = _pixels.Color(255, 255, 0);
   _red = _pixels.Color(255, 0, 0);
-  _delayMs = _delayRotating;
 }
 
 void RotatingLight::begin() {
   _pixels.begin();
   _pixels.show();
-  _state = RotatingLightState::Driving;
-  _counter = 0;
+  _state = RotatingLightState::OFF;
 }
 
-void RotatingLight::set(RotatingLightState state, uint8_t rotations) {
-  _counter = rotations * _numPixels;
-  _state = state;
-  (_state==RotatingLightState::Error) ? _delayMs = _delayBlinking: _delayMs = _delayRotating;
+void RotatingLight::setStates(RotatingLightState state, uint8_t position)
+{
+  _states[_offset+position] = state;
+  _states[_offset+position+1] =  state;
+}
+
+void RotatingLight::set(RotatingLightState state, Direction dir) {
+  switch (dir)
+  {
+  case Direction::LEFT: 
+    setStates(state,0);
+    Serial.println("Left");
+    printArray();
+    break;
+  
+  case Direction::RIGHT:
+    setStates(state, _numPixels-1);
+    Serial.println("Right");
+    printArray();
+  
+  default:
+    break;
+  }
 }
 
 void RotatingLight::update() {
-    static unsigned long _lastUpdateTime = 0;
-    static bool redOn = false;
-    unsigned long _currentTime = millis();
-
-    if (_currentTime - _lastUpdateTime < _delayMs) {
-      return;
+  printArray();
+  Serial.println("up");
+  _pixels.setBrightness(50);
+  for (int i = 0; i < _numPixels; ++i) {
+    switch (_states[_offset + i]) {
+      case RotatingLightState::OFF:
+        _pixels.setPixelColor(i, 0);
+        break;
+      case RotatingLightState::GREEN:
+        _pixels.setPixelColor(i, _green);
+        break;
+      case RotatingLightState::YELLOW:
+        _pixels.setPixelColor(i, _yellow);
+        break;
+      case RotatingLightState::RED:
+        _pixels.setPixelColor(i, _red);
+        break;
     }
-    _lastUpdateTime = _currentTime;
-
-    _pixels.clear();
-
-    if (_state == RotatingLightState::Error) {
-        if (redOn) {
-          _setFull(_red);
-        } else {
-          _pixels.clear();
-        }
-        redOn = !redOn;
-    }
-    else if (_state == RotatingLightState::FoundVictimBig) {
-        _runningLed(_red);
-        _counter--;
-        if (_counter == 0) {
-          _state = RotatingLightState::Driving;
-          _delayMs = _delayRotating;
-        }
-    } 
-    else if (_state == RotatingLightState::FoundVictimMiddlel) {
-        _runningLed(_orange);
-        _counter--;
-        if (_counter == 0) {
-          _state = RotatingLightState::Driving;
-          _delayMs = _delayRotating;
-        }
-    } 
-    else if (_state == RotatingLightState::FoundVictimLiddle) {
-        _runningLed(_yellow);
-        _counter--;
-        if (_counter == 0) {
-          _state = RotatingLightState::Driving;
-          _delayMs = _delayRotating;
-        }
-    }
-    else {
-        _setFull(_green);
-    }
-
-    _pixels.show();
+  }
+  _pixels.show();
 }
+
 
 
 uint32_t RotatingLight::_getDimmedColor(uint32_t color, float factor) {

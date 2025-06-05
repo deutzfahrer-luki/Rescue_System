@@ -2,11 +2,12 @@
 #include <Arduino.h>
 #include "RotatingLight.h"
 
-RotatingLight _ring(10);
+RotatingLight _ring(30, 0);
 
 void setup() {
   _ring.begin();
   Serial.begin(9600);
+  Serial.println("Send '1' for LEFT green, '2' for RIGHT green");
 }
 
 void loop() {
@@ -14,16 +15,19 @@ void loop() {
 
   if (Serial.available() > 0) {
     char input = Serial.read();
+    Serial.print("Received: ");
+    Serial.println(input);  // Debug-Ausgabe
+
     if (input == '1') {
-      _ring.set(RotatingLightState::FoundVictimBig);
+      Serial.println("Set LEFT GREEN");
+      _ring.set(RotatingLightState::GREEN, Direction::LEFT);
     } else if (input == '2') {
-      _ring.set(RotatingLightState::FoundVictimMiddlel);
-    } else if (input == '3') {
-      _ring.set(RotatingLightState::FoundVictimLiddle);
-    } else if (input == '4') {
-      _ring.set(RotatingLightState::Error);
-    } else if (input == '5') {
-      _ring.set(RotatingLightState::Driving);
+      Serial.println("Set RIGHT GREEN");
+      _ring.set(RotatingLightState::GREEN, Direction::RIGHT);
+    } else {
+      Serial.println("Unknown input");
     }
   }
+
+  delay(100); // Optional: Nicht zu oft updaten
 }
